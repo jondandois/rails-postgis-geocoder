@@ -5,7 +5,9 @@ module GeocoderApi
     class GeocodeController < ApplicationController
       # basic geocode search
       def search
-        @address = search_params[:address]
+        address = search_params[:address]
+        @result = GeocodeUtil.search(address: address)
+        render status: @result[:status]
       end
 
       private
