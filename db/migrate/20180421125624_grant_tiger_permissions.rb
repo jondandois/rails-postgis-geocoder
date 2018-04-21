@@ -1,0 +1,33 @@
+class GrantTigerPermissions < ActiveRecord::Migration[5.2]
+  def up
+    execute <<-SQL
+      GRANT USAGE ON SCHEMA tiger to PUBLIC;
+      GRANT USAGE ON SCHEMA tiger_data to PUBLIC;
+      GRANT SELECT, REFERENCES, TRIGGER
+        ON ALL TABLES IN SCHEMA tiger TO PUBLIC;
+      GRANT SELECT, REFERENCES, TRIGGER
+        ON ALL TABLES IN SCHEMA tiger_data TO PUBLIC;
+      GRANT EXECUTE
+        ON ALL FUNCTIONS IN SCHEMA tiger TO PUBLIC;
+      ALTER DEFAULT PRIVILEGES IN SCHEMA tiger_data
+        GRANT SELECT, REFERENCES
+        ON TABLES TO PUBLIC;
+    SQL
+  end
+
+  def down
+    execute <<-SQL
+      REVOKE USAGE ON SCHEMA tiger to PUBLIC;
+      REVOKE USAGE ON SCHEMA tiger_data to PUBLIC;
+      REVOKE SELECT, REFERENCES, TRIGGER
+        ON ALL TABLES IN SCHEMA tiger TO PUBLIC;
+      REVOKE SELECT, REFERENCES, TRIGGER
+        ON ALL TABLES IN SCHEMA tiger_data TO PUBLIC;
+      REVOKE EXECUTE
+        ON ALL FUNCTIONS IN SCHEMA tiger TO PUBLIC;
+      ALTER DEFAULT PRIVILEGES IN SCHEMA tiger_data
+        REVOKE SELECT, REFERENCES
+        ON TABLES TO PUBLIC;
+    SQL
+  end
+end
