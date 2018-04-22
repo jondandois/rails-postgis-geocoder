@@ -36,11 +36,16 @@ class GeocodeUtil
       SQL
     end
 
+    # postgres db connection
+    def db_connection
+      @db_connection ||= ActiveRecord::Base.connection
+    end
+
     def make_query(address)
-      safe_address = ActiveRecord::Base.connection.quote(address.html_safe)
+      safe_address = db_connection.quote(address.html_safe)
       res = []
       begin
-        res = ActiveRecord::Base.connection.execute(geocode_assertion(safe_address))
+        res = db_connection.execute(geocode_assertion(safe_address))
       rescue ActiveRecord::StatementInvalid => e
         Rails.logger.warn { "Invalid Statement generated for type assertion:\n#{e}" }
       end
